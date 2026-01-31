@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VCET E-Portal</title>
+  <style>
+    body {font-family:'Poppins',sans-serif;margin:0;background:#eef3ff;color:#1e3a8a;}
+    header {background:#1e3a8a;color:#fff;padding:15px;text-align:center;font-size:24px;}
+    .container {padding:20px;max-width:1000px;margin:auto;}
+    .card {background:white;padding:20px;border-radius:15px;box-shadow:0 4px 10px rgba(0,0,0,0.1);margin:20px 0;}
+    input,select {padding:10px;margin:5px;width:90%;border:1px solid #ccc;border-radius:10px;}
+    button {background:#1e3a8a;color:white;padding:10px 15px;border:none;border-radius:10px;cursor:pointer;margin-top:10px;}
+    button:hover {background:#3b82f6;}
+    table {width:100%;border-collapse:collapse;margin-top:10px;}
+    th,td {border:1px solid #ccc;padding:10px;text-align:center;}
+    th {background:#e0f2fe;}
+    .logout {float:right;color:white;text-decoration:none;font-size:16px;}
+    .hidden {display:none;}
+    .tabs {display:flex;justify-content:center;gap:10px;margin-top:20px;}
+    .tabs button {background:#2563eb;border:none;padding:10px 20px;color:white;border-radius:10px;cursor:pointer;}
+    .tabs button:hover {background:#1e40af;}
+    .sidebar {width:230px;background:#1e3a8a;min-height:100vh;color:#fff;position:fixed;top:0;left:0;padding-top:20px;}
+    .sidebar h2 {text-align:center;margin-bottom:20px;}
+    .sidebar button {width:100%;padding:12px;border:none;background:none;color:white;text-align:left;cursor:pointer;font-size:16px;}
+    .sidebar button:hover {background:#3b82f6;}
+    .content {margin-left:250px;padding:20px;}
+  </style>
+</head>
+<body>
+
+  <!-- Main Menu -->
+  <div id="mainMenu" class="container" style="text-align:center;margin-top:100px;">
+    <h1>🚌 VCET E-Portal</h1>
+    <p>Vellalar College of Engineering and Technology</p>
+    <div class="tabs">
+      <button onclick="showLogin('admin')">Admin Login</button>
+      <button onclick="showLogin('student')">Student Login</button>
+    </div>
+  </div>
+
+  <!-- Admin Login -->
+  <div id="adminLogin" class="container hidden" style="text-align:center;margin-top:100px;">
+    <h2>Admin Login</h2>
+    <input type="text" id="adminId" placeholder="Admin ID"><br>
+    <input type="password" id="adminPass" placeholder="Password"><br>
+    <button onclick="adminLogin()">Login</button>
+    <p id="adminError" style="color:red;"></p>
+  </div>
+
+  <!-- Student Login -->
+  <div id="studentLogin" class="container hidden" style="text-align:center;margin-top:100px;">
+    <h2>Student Login</h2>
+    <input type="text" id="studentRollLogin" placeholder="Roll Number"><br>
+    <button onclick="studentLogin()">Login</button>
+    <p id="studentError" style="color:red;"></p>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="adminDashboard" class="hidden">
+    <div class="sidebar">
+      <h2>Admin Panel</h2>
+      <button onclick="showSection('bus')">Bus Management</button>
+      <button onclick="showSection('route')">Route Management</button>
+      <button onclick="showSection('student')">Student Management</button>
+      <button onclick="showSection('overview')">Overview</button>
+      <button onclick="showSection('attendance')">Attendance</button>
+      <button onclick="showSection('cost')">Cost Details</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="content">
+      <header>VCET E-Portal – Admin Dashboard</header>
+
+      <!-- Bus Management -->
+      <div id="bus" class="section">
+        <div class="card">
+          <h2>Bus Management</h2>
+          <input type="text" id="busName" placeholder="Bus Name"><br>
+          <select id="busRoute"><option value="">Select Route</option></select><br>
+          <input type="number" id="busCapacity" placeholder="Capacity"><br>
+          <button onclick="addBus()">Add Bus</button>
+          <table id="busTable">
+            <tr><th>ID</th><th>Name</th><th>Route</th><th>Capacity</th><th>Action</th></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Route Management -->
+      <div id="route" class="section hidden">
+        <div class="card">
+          <h2>Route Management</h2>
+          <input type="text" id="routeName" placeholder="Route Name (e.g., Route A - Main Campus)"><br>
+          <input type="text" id="routeStops" placeholder="Stops (comma-separated)"><br>
+          <input type="number" id="routeDistance" placeholder="Total Distance (km)"><br>
+          <input type="text" id="routeBusNumber" placeholder="Bus Number (e.g., AP-28-TG-5401)"><br>
+          <input type="text" id="routeDestination" placeholder="Destination"><br>
+          <button onclick="addRoute()">Add Route</button>
+          <table id="routeTable">
+            <tr><th>ID</th><th>Route Name</th><th>Stops</th><th>Distance</th><th>Bus Number</th><th>Action</th></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Student Management -->
+      <div id="student" class="section hidden">
+        <div class="card">
+          <h2>Student Management</h2>
+          <input type="text" id="studentName" placeholder="Student Name"><br>
+          <input type="text" id="studentRoll" placeholder="Roll Number"><br>
+          <select id="studentBus"><option value="">Select Bus</option></select><br>
+          <button onclick="addStudent()">Add Student</button>
+          <table id="studentTable">
+            <tr><th>ID</th><th>Name</th><th>Roll No</th><th>Bus</th><th>Action</th></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Overview -->
+      <div id="overview" class="section hidden">
+        <div class="card">
+          <h2>Dashboard Overview</h2>
+          <ul>
+            <li>Total Buses: <span id="busCount"></span></li>
+            <li>Total Students: <span id="studentCount"></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Attendance -->
+      <div id="attendance" class="section hidden">
+        <div class="card">
+          <h2>Attendance Monitoring</h2>
+          <p>Example data — can be integrated with future features.</p>
+          <table>
+            <tr><th>Name</th><th>Roll No</th><th>Bus</th><th>Status</th></tr>
+            <tr><td>Example Student</td><td>21AIML001</td><td>Bus 1</td><td>Present</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Cost Details -->
+      <div id="cost" class="section hidden">
+        <div class="card">
+          <h2>Cost Details</h2>
+          <ul>
+            <li>Bus 1 – ₹12,000 maintenance</li>
+            <li>Bus 2 – ₹10,500 maintenance</li>
+            <li>Bus 3 – ₹8,700 maintenance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Dashboard -->
+  <div id="studentDashboard" class="hidden">
+    <header>
+      VCET E-Portal – Student Dashboard
+      <a href="#" class="logout" onclick="logout()">Logout</a>
+    </header>
+    <div class="container">
+      <div class="card">
+        <h2>Welcome, <span id="studentNameDisplay"></span></h2>
+        <p><b>Roll No:</b> <span id="studentRollDisplay"></span></p>
+        <p><b>Bus Assigned:</b> <span id="studentBusDisplay"></span></p>
+      </div>
+      <div class="card">
+        <h3>All Registered Students</h3>
+        <table id="studentListTable">
+          <tr><th>Name</th><th>Roll No</th><th>Bus</th></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_ID="admin", ADMIN_PASS="1234";
+    let buses=JSON.parse(localStorage.getItem("buses"))||[];
+    let students=JSON.parse(localStorage.getItem("students"))||[];
+
+    function showLogin(type){
+      document.getElementById("mainMenu").classList.add("hidden");
+      document.getElementById(type+"Login").classList.remove("hidden");
+    }
+    function logout(){
+      document.querySelectorAll(".container,#adminDashboard,#studentDashboard").forEach(e=>e.classList.add("hidden"));
+      document.getElementById("mainMenu").classList.remove("hidden");
+    }
+
+    function adminLogin(){
+      const id=document.getElementById("adminId").value.trim();
+      const pass=document.getElementById("adminPass").value.trim();
+      const err=document.getElementById("adminError");
+      if(id===ADMIN_ID && pass===ADMIN_PASS){
+        document.getElementById("adminLogin").classList.add("hidden");
+        document.getElementById("adminDashboard").classList.remove("hidden");
+        loadTables();
+        updateOverview();
+      }else err.textContent="Invalid Admin ID or Password!";
+    }
+
+    function studentLogin(){
+      const roll=document.getElementById("studentRollLogin").value.trim();
+      const student=students.find(s=>s.roll===roll);
+      const err=document.getElementById("studentError");
+      if(student){
+        document.getElementById("studentLogin").classList.add("hidden");
+        document.getElementById("studentDashboard").classList.remove("hidden");
+        document.getElementById("studentNameDisplay").textContent=student.name;
+        document.getElementById("studentRollDisplay").textContent=student.roll;
+        document.getElementById("studentBusDisplay").textContent=student.bus;
+        loadStudentList();
+      }else err.textContent="Student not found!";
+    }
+
+    function addBus(){
+      const name=document.getElementById("busName").value.trim();
+      const route=document.getElementById("busRoute").value.trim();
+      const cap=document.getElementById("busCapacity").value.trim();
+      if(name&&route&&cap){
+        const id=Date.now();
+        buses.push({id,name,route,capacity:cap});
+        localStorage.setItem("buses",JSON.stringify(buses));
+        ["busName","busRoute","busCapacity"].forEach(i=>document.getElementById(i).value="");
+        loadTables(); updateOverview();
+      }
+    }
+
+    function deleteBus(id){
+      buses=buses.filter(b=>b.id!==id);
+      localStorage.setItem("buses",JSON.stringify(buses));
+      loadTables(); updateOverview();
+    }
+
+    function addStudent(){
+      const name=document.getElementById("studentName").value.trim();
+      const roll=document.getElementById("studentRoll").value.trim();
+      const bus=document.getElementById("studentBus").value;
+      if(!name||!roll||!bus){alert("Please fill all details!");return;}
+      if(students.some(s=>s.roll===roll)){alert("Roll Number exists!");return;}
+      const id=Date.now();
+      students.push({id,name,roll,bus});
+      localStorage.setItem("students",JSON.stringify(students));
+      ["studentName","studentRoll"].forEach(i=>document.getElementById(i).value="");
+      document.getElementById("studentBus").value="";
+      loadTables(); updateOverview();
+    }
+
+    function deleteStudent(id){
+      students=students.filter(s=>s.id!==id);
+      localStorage.setItem("students",JSON.stringify(students));
+      loadTables(); updateOverview();
+    }
+
+    function loadTables(){
+      const busT=document.getElementById("busTable");
+      const stuT=document.getElementById("studentTable");
+      const stuBus=document.getElementById("studentBus");
+      busT.innerHTML=`<tr><th>ID</th><th>Name</th><th>Route</th><th>Capacity</th><th>Action</th></tr>`;
+      stuT.innerHTML=`<tr><th>ID</th><th>Name</th><th>Roll No</th><th>Bus</th><th>Action</th></tr>`;
+      stuBus.innerHTML=`<option value="">Select Bus</option>`;
+      buses.forEach(b=>{
+        busT.innerHTML+=`<tr><td>${b.id}</td><td>${b.name}</td><td>${b.route}</td><td>${b.capacity}</td><td><button onclick="deleteBus(${b.id})">❌</button></td></tr>`;
+        stuBus.innerHTML+=`<option value="${b.name}">${b.name}</option>`;
+      });
+      students.forEach(s=>{
+        stuT.innerHTML+=`<tr><td>${s.id}</td><td>${s.name}</td><td>${s.roll}</td><td>${s.bus}</td><td><button onclick="deleteStudent(${s.id})">❌</button></td></tr>`;
+      });
+    }
+
+    function loadStudentList(){
+      const tbl=document.getElementById("studentListTable");
+      tbl.innerHTML=`<tr><th>Name</th><th>Roll No</th><th>Bus</th></tr>`;
+      students.forEach(s=>tbl.innerHTML+=`<tr><td>${s.name}</td><td>${s.roll}</td><td>${s.bus}</td></tr>`);
+    }
+
+    function showSection(id){
+      document.querySelectorAll(".section").forEach(sec=>sec.classList.add("hidden"));
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    function updateOverview(){
+      document.getElementById("busCount").textContent=buses.length;
+      document.getElementById("studentCount").textContent=students.length;
+    }
+
+    window.onload=loadTables;
+  </script>
+</body>
+</html>

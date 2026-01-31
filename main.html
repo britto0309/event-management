@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCET Bus Fare Management System - Complete Application</title>
+    <style>
+        /* ==================== GLOBAL STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* ==================== HOME PAGE ==================== */
+        .home-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .home-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .home-container h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .home-container h2 {
+            font-weight: normal;
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+
+        .home-container button {
+            background: #fff;
+            color: #1e3a8a;
+            border: none;
+            padding: 12px 30px;
+            margin: 10px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .home-container button:hover {
+            background: #3b82f6;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ==================== LOGIN/REGISTER PAGE ==================== */
+        .auth-page {
+            display: none;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f7f7f7;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .form-container {
+            display: none;
+            padding: 40px;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* ==================== DASHBOARD ==================== */
+        .dashboard-page {
+            display: none;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h2 {
+            font-size: 22px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item span {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-left-color: white;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+
+        .top-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .top-header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            border-radius: 10px;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .announcement-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .announcement-card {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e1e1e1;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: #e0e7ff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HOME PAGE ==================== -->
+    <div id="home-page" class="home-page">
+        <div class="home-container">
+            <h1>🚌 VCET E-Portal for Bus</h1>
+            <h2>AI Bus Fare Management System</h2>
+            <button onclick="showPage('student-auth')">Student Portal</button>
+            <button onclick="showPage('admin-auth')">Admin Portal</button>
+        </div>
+        <footer>© 2025 Vellalar College of Engineering and Technology (VCET) | Developed by AI & ML Department</footer>
+    </div>
+
+    <!-- ==================== STUDENT AUTH PAGE ==================== -->
+    <div id="student-auth-page" class="auth-page">
+        <div class="login-box">
+            <div class="logo">
+                <h1>🚌 Bus Fare Management</h1>
+                <p>AIML Department - Code Rush 2025</p>
+            </div>
+            
+            <div id="login-form" class="form-container active">
+                <h2>Student Login</h2>
+                <p style="text-align:center; color:#666; margin-bottom:20px;">Login with credentials provided by admin</p>
+                <div style="background:#dcfce7; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid #16a34a;">
+                    <p style="color:#166534; margin:0; font-size:14px;"><strong>📌 Demo Account:</strong></p>
+                    <p style="color:#15803d; margin:5px 0 0 0; font-size:13px;">Roll No: <strong>21A91A6701</strong> | Password: <strong>demo123</strong></p>
+                </div>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Roll Number</label>
+                        <input type="text" id="login-rollno" placeholder="Enter your roll number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <p style="text-align:center; margin-top:15px; color:#666;">
+                        <a href="#" onclick="showPage('home')" style="color:#667eea;">← Back to Home</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STUDENT DASHBOARD ==================== -->
+    <div id="student-dashboard-page" class="dashboard-page">
+        <div class="dashboard">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>🚌 Bus System</h2>
+                </div>
+                <nav class="sidebar-nav">
+                    <a class="nav-item active" onclick="showSection('overview')">
+                        <span>📊</span> Overview
+                    </a>
+                    <a class="nav-item" onclick="showSection('routes')">
+                        <span>🗺️</span> Bus Routes
+                    </a>
+                    <a class="nav-item" onclick="showSection('attendance')">
+                        <span>🗓️</span> Attendance
+                    </a>
+                    <a class="nav-item" onclick="showSection('payments')">
+                        <span>💳</span> Payments
+                    </a>
+                    <a class="nav-item" onclick="showSection('notifications')">
+                        <span>🔔</span> Notifications
+                    </a>
+                    <a class="nav-item" onclick="showSection('issues')">
+                        <span>⚠️</span> Report Issue
+                    </a>
+                    <a class="nav-item" onclick="showSection('profile')">
+                        <span>👤</span> My Profile
+                    </a>
+                    <a class="nav-item" onclick="handleLogout()">
+                        <span>🚪</span> Logout
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+                <header class="top-header">
+                    <h1 id="section-title">Dashboard Overview</h1>
+                    <div class="user-info">
+                        <span id="user-name">Student</span>
+                        <div class="user-avatar">👤</div>
+                    </div>
+                </header>
+
+                <!-- Overview Section -->
+                <section id="overview-section" class="content-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📄</div>
+                            <div class="stat-info">
+                                <h3 id="due-status">Due: ₹0</h3>
+                                <p>Fee Due Status</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-info">
+                                <h3 id="current-fare">₹0</h3>
+                                <p>Current Semester Fee</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⛽</div>
+                            <div class="stat-info">
+                                <h3 id="fuel-cost">₹0</h3>
+                                <p>Fuel Cost Share</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📏</div>
+                            <div class="stat-info">
+                                <h3 id="cost-per-km">₹0/km</h3>
+                                <p>Cost per km</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🚌</div>
+                            <div class="stat-info">
+                                <h3 id="route-info">Not Assigned</h3>
+                                <p>Assigned Route</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-info">
+                                <h3 id="semester-info">Fall 2025</h3>
+                                <p>Current Semester</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="announcement-section">
+                        <h2>📢 Announcements</h2>
+                        <div class="announcement-card">
+                            <h3>Welcome to AI-Driven Bus Fare Management System</h3>
+                            <p>This system calculates optimized bus fees based on real operational data including fuel costs, maintenance schedules, and route distances.</p>
+                            <small>Date: November 1, 2025</small>
+                        </div>
+                        <div class="announcement-card">
+                            <h3>📊 Semester Fee Structure by Routes</h3>
+                            <div style="margin-top:15px; display:grid; gap:10px;">
+                                <div style="padding:10px; background:white; border-radius:6px; display:flex; justify-content:space-between;">
+                                    <span><strong>Route A - Main Campus:</strong> 15 km</span>
+                                    <span style="color:#667eea; font-weight:bold;">₹2,500</span>
+                                </div>
+                                <div style="padding:10px; background:white; border-radius:6px; display:flex; justify-content:space-between;">
+                                    <span><strong>Route B - East Side:</strong> 12 km</span>
+                                    <span style="color:#667eea; font-weight:bold;">₹2,100</span>
+                                </div>
+                                <div style="padding:10px; background:white; border-radius:6px; display:flex; justify-content:space-between;">
+                                    <span><strong>Route C - West Side:</strong> 18 km</span>
+                                    <span style="color:#667eea; font-weight:bold;">₹2,900</span>
+                                </div>
+                                <div style="padding:10px; background:white; border-radius:6px; display:flex; justify-content:space-between;">
+                                    <span><strong>Route D - North Campus:</strong> 10 km</span>
+                                    <span style="color:#667eea; font-weight:bold;">₹1,900</span>
+                                </div>
+                            </div>
+                            <small style="margin-top:10px; display:block;">Updated: November 1, 2025</small>
+                        </div>
+                        <div class="announcement-card">
+                            <h3>Transparent Cost Breakdowns</h3>
+                            <p>View detailed fare calculations and maintenance logs for complete transparency in cost distribution. Fees are calculated based on route distance, fuel costs, maintenance, and operational expenses.</p>
+                            <small>Date: October 30, 2025</small>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Routes Section -->
+                <section id="routes-section" class="content-section">
+                    <div id="routes-container"></div>
+                </section>
+
+                <!-- Attendance Section -->
+                <section id="attendance-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>My Bus Attendance</h2>
+                        <p style="color:#666; margin-bottom:20px;">Your daily bus attendance record for the semester</p>
+                        <div id="attendance-summary" style="margin-bottom:20px;"></div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Day</th>
+                                    <th>Status</th>
+                                    <th>Route</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-table"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Payments Section -->
+                <section id="payments-section" class="content-section">
+                    <div class="profile-card" style="max-width:800px;">
+                        <h2>Fee Payment Details</h2>
+                        
+                        <div id="fee-breakdown" style="background:#f8f9fa; padding:20px; border-radius:10px; margin-bottom:20px;"></div>
+                        
+                        <div id="payment-due" style="margin:10px 0 20px; font-size:20px;"></div>
+                        
+                        <div style="display:grid; gap:12px; max-width:400px;">
+                            <select id="pay-method" class="form-group" style="padding:12px;">
+                                <option value="UPI">UPI</option>
+                                <option value="Card">Card</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Net Banking">Net Banking</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="makePayment()">Pay Now</button>
+                        </div>
+                        <div style="margin-top:30px;">
+                            <h3>Transaction History</h3>
+                            <div id="transactions"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notifications Section -->
+                <section id="notifications-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>Notifications</h2>
+                        <div id="notifications-list"></div>
+                    </div>
+                </section>
+
+                <!-- Issues Section -->
+                <section id="issues-section" class="content-section">
+                    <div class="profile-card" style="max-width:600px;">
+                        <h2>Report Vehicle/Route Issue</h2>
+                        <div class="form-group">
+                            <label>Issue Title</label>
+                            <input id="issue-title" placeholder="e.g., Bus delay on Route A">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input id="issue-desc" placeholder="Describe the problem...">
+                        </div>
+                        <button class="btn btn-primary" onclick="submitIssue()">Submit Issue</button>
+                        <div style="margin-top:20px;">
+                            <h3>My Issues</h3>
+                            <div id="issues-list"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Section -->
+                <section id="profile-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>My Profile</h2>
+                        <div id="profile-info"></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN AUTH PAGE ==================== -->
+    <div id="admin-auth-page" class="auth-page">
+        <div class="login-box" style="max-width:400px;">
+            <div class="logo">
+                <h1>🔐 Admin Login</h1>
+                <p>Bus Fare Management System</p>
+            </div>
+            <div class="form-container active">
+                <div style="background:#e0f2fe; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid #0284c7;">
+                    <p style="color:#075985; margin:0; font-size:14px;"><strong>📌 Demo Credentials:</strong></p>
+                    <p style="color:#0c4a6e; margin:5px 0 0 0; font-size:13px;">ID: <strong>admin</strong> | Password: <strong>admin123</strong></p>
+                </div>
+                <form onsubmit="handleAdminLogin(event)">
+                    <div class="form-group">
+                        <label>Admin ID</label>
+                        <input type="text" id="admin-id" placeholder="Enter admin ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="admin-password" placeholder="Enter password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <p style="text-align:center; margin-top:15px; color:#666;">
+                        <a href="#" onclick="showPage('home')" style="color:#667eea;">← Back to Home</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN DASHBOARD ==================== -->
+    <div id="admin-dashboard-page" class="dashboard-page">
+        <div class="dashboard">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>🔐 Admin Panel</h2>
+                </div>
+                <nav class="sidebar-nav">
+                    <a class="nav-item active" onclick="showAdminSection('overview')">
+                        <span>📊</span> Overview
+                    </a>
+                    <a class="nav-item" onclick="showAdminSection('buses')">
+                        <span>🚌</span> Bus Management
+                    </a>
+                    <a class="nav-item" onclick="showAdminSection('students')">
+                        <span>👥</span> Student Management
+                    </a>
+                    <a class="nav-item" onclick="showAdminSection('attendance')">
+                        <span>📅</span> Attendance Tracking
+                    </a>
+                    <a class="nav-item" onclick="showAdminSection('fees')">
+                        <span>💰</span> Fee Details
+                    </a>
+                    <a class="nav-item" onclick="showAdminSection('gps')">
+                        <span>📍</span> GPS Tracking
+                    </a>
+                    <a class="nav-item" onclick="showAdminSection('maintenance')">
+                        <span>🔧</span> Bus Maintenance
+                    </a>
+                    <a class="nav-item" onclick="handleAdminLogout()">
+                        <span>🚪</span> Logout
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+                <header class="top-header">
+                    <h1>Admin Dashboard</h1>
+                    <div class="user-info">
+                        <span>Administrator</span>
+                        <div class="user-avatar">🔐</div>
+                    </div>
+                </header>
+
+                <!-- Admin Overview -->
+                <section id="admin-overview-section" class="content-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🚌</div>
+                            <div class="stat-info">
+                                <h3 id="total-buses">0</h3>
+                                <p>Total Buses</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <h3 id="total-students">0</h3>
+                                <p>Registered Students</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-info">
+                                <h3 id="total-revenue">₹0</h3>
+                                <p>Total Revenue Collected</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-info">
+                                <h3 id="today-attendance">0</h3>
+                                <p>Today's Attendance</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bus Management -->
+                <section id="admin-buses-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>Bus Management</h2>
+                        <div class="form-group">
+                            <label>Bus Name/Number</label>
+                            <input id="bus-name" placeholder="e.g., AP-28-TG-5401">
+                        </div>
+                        <div class="form-group">
+                            <label>Route</label>
+                            <select id="bus-route">
+                                <option value="">Select Route</option>
+                                <option value="A">Route A - Main Campus (15 km) - ₹2,500/semester</option>
+                                <option value="B">Route B - East Side (12 km) - ₹2,100/semester</option>
+                                <option value="C">Route C - West Side (18 km) - ₹2,900/semester</option>
+                                <option value="D">Route D - North Campus (10 km) - ₹1,900/semester</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Capacity (Students)</label>
+                            <input type="number" id="bus-capacity" placeholder="e.g., 50">
+                        </div>
+                        <div class="form-group">
+                            <label>Fuel Efficiency (km per liter)</label>
+                            <input type="number" id="bus-fuel-efficiency" placeholder="e.g., 6" value="6">
+                        </div>
+                        <div class="form-group">
+                            <label>GPS Device ID</label>
+                            <input id="bus-gps" placeholder="e.g., GPS-12345">
+                        </div>
+                        <div class="form-group">
+                            <label>Monthly Maintenance Charge (₹)</label>
+                            <input type="number" id="bus-maintenance" placeholder="e.g., 5000">
+                        </div>
+                        <button class="btn btn-primary" onclick="addBus()">Add Bus</button>
+                        <div style="margin-top:30px;">
+                            <h3>All Buses</h3>
+                            <table id="buses-table">
+                                <thead>
+                                    <tr>
+                                        <th>Bus Number</th>
+                                        <th>Route</th>
+                                        <th>Capacity</th>
+                                        <th>Fuel/km</th>
+                                        <th>GPS ID</th>
+                                        <th>Maintenance</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Student Management -->
+                <section id="admin-students-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>Student Management</h2>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input id="student-name" placeholder="Enter student name">
+                        </div>
+                        <div class="form-group">
+                            <label>Roll Number</label>
+                            <input id="student-rollno" placeholder="Enter roll number">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="student-email" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select id="student-department">
+                                <option value="">Select Department</option>
+                                <option value="CSE(AIML)">CSE (AIML)</option>
+                                <option value="CSE">CSE</option>
+                                <option value="ECE">ECE</option>
+                                <option value="EEE">EEE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Year</label>
+                            <select id="student-year">
+                                <option value="">Select Year</option>
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Route</label>
+                            <select id="student-route">
+                                <option value="">Select Route</option>
+                                <option value="A">Route A - Main Campus (15 km) - ₹2,500/semester</option>
+                                <option value="B">Route B - East Side (12 km) - ₹2,100/semester</option>
+                                <option value="C">Route C - West Side (18 km) - ₹2,900/semester</option>
+                                <option value="D">Route D - North Campus (10 km) - ₹1,900/semester</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="student-password" placeholder="Set password for student">
+                        </div>
+                        <button class="btn btn-primary" onclick="addStudent()">Add Student</button>
+                        
+                        <div style="margin-top:30px;">
+                            <h3>All Registered Students</h3>
+                            <table id="students-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Roll No</th>
+                                        <th>Department</th>
+                                        <th>Route</th>
+                                        <th>Bus Number</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Attendance Tracking -->
+                <section id="admin-attendance-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>Attendance Tracking</h2>
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block; margin-bottom:10px; font-weight:600;">Select Date:</label>
+                            <input type="date" id="attendance-date" style="padding:10px; border:2px solid #e1e1e1; border-radius:8px;" value="">
+                            <button class="btn btn-primary" style="width:auto; margin-left:10px; padding:10px 20px;" onclick="loadAttendanceForDate()">Load Attendance</button>
+                            <button class="btn btn-primary" style="width:auto; margin-left:10px; padding:10px 20px; background:#16a34a;" onclick="markAllPresent()">Mark All Present</button>
+                        </div>
+                        <div style="margin-top:30px;">
+                            <h3>Attendance for <span id="selected-date-display">Today</span></h3>
+                            <table id="attendance-table">
+                                <thead>
+                                    <tr>
+                                        <th>Roll No</th>
+                                        <th>Name</th>
+                                        <th>Route</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fee Details -->
+                <section id="admin-fees-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>Student Fee Details</h2>
+                        <table id="fees-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Name</th>
+                                    <th>Route</th>
+                                    <th>Total Fee</th>
+                                    <th>Fuel Cost</th>
+                                    <th>Maintenance</th>
+                                    <th>Due Amount</th>
+                                    <th>Paid Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- GPS Tracking -->
+                <section id="admin-gps-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>GPS Tracking - Live Bus Locations</h2>
+                        <div id="gps-container"></div>
+                    </div>
+                </section>
+
+                <!-- Bus Maintenance -->
+                <section id="admin-maintenance-section" class="content-section">
+                    <div class="profile-card">
+                        <h2>Bus Maintenance Records</h2>
+                        <div style="margin-bottom:20px;">
+                            <h3>Add Maintenance Record</h3>
+                            <div class="form-group">
+                                <label>Select Bus</label>
+                                <select id="maintenance-bus"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Maintenance Type</label>
+                                <select id="maintenance-type">
+                                    <option value="Oil Change">Oil Change</option>
+                                    <option value="Tire Replacement">Tire Replacement</option>
+                                    <option value="Engine Service">Engine Service</option>
+                                    <option value="Brake Service">Brake Service</option>
+                                    <option value="AC Repair">AC Repair</option>
+                                    <option value="Body Work">Body Work</option>
+                                    <option value="General Checkup">General Checkup</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Cost (₹)</label>
+                                <input type="number" id="maintenance-cost" placeholder="e.g., 5000">
+                            </div>
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" id="maintenance-date">
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <input id="maintenance-notes" placeholder="Additional details">
+                            </div>
+                            <button class="btn btn-primary" onclick="addMaintenanceRecord()">Add Record</button>
+                        </div>
+                        <div style="margin-top:30px;">
+                            <h3>All Maintenance Records</h3>
+                            <table id="maintenance-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Bus Number</th>
+                                        <th>Type</th>
+                                        <th>Cost</th>
+                                        <th>Notes</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // ==================== GLOBAL STATE & UTILITIES ====================
+        const ADMIN_CREDENTIALS = { id: 'admin', password: 'admin123' };
+        let currentUser = null;
+
+        function showPage(pageId) {
+            document.querySelectorAll('.home-page, .auth-page, .dashboard-page').forEach(p => p.style.display = 'none');
+            if (pageId === 'home') {
+                document.getElementById('home-page').style.display = 'flex';
+            } else if (pageId === 'student-auth') {
+                document.getElementById('student-auth-page').style.display = 'flex';
+            } else if (pageId === 'admin-auth') {
+                document.getElementById('admin-auth-page').style.display = 'flex';
+            } else if (pageId === 'student-dashboard') {
+                document.getElementById('student-dashboard-page').style.display = 'block';
+            } else if (pageId === 'admin-dashboard') {
+                document.getElementById('admin-dashboard-page').style.display = 'block';
+            }
+        }
+
+
+
+        function showAlert(formId, message, type) {
+            clearAlerts();
+            const form = document.getElementById(formId);
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            form.insertBefore(alert, form.firstChild);
+        }
+
+        function clearAlerts() {
+            document.querySelectorAll('.alert').forEach(alert => alert.remove());
+        }
+
+        // ==================== STUDENT AUTH ====================
+        function handleLogin(event) {
+            event.preventDefault();
+            const rollNo = document.getElementById('login-rollno').value;
+            const password = document.getElementById('login-password').value;
+            const users = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            const user = users.find(u => u.rollNo === rollNo && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showPage('student-dashboard');
+                initDashboard();
+            } else {
+                showAlert('login-form', 'Invalid credentials. Please contact admin.', 'error');
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                showPage('home');
+            }
+        }
+
+        // ==================== STUDENT DASHBOARD ====================
+        function initDashboard() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) return;
+            currentUser = user;
+            
+            document.getElementById('user-name').textContent = user.name;
+            updateOverviewStats(user);
+            loadRoutesSection(user);
+            loadProfileSection(user);
+            loadAttendance(user);
+            renderPayments(user);
+            renderNotifications(user);
+            renderIssues(user);
+        }
+
+        function updateOverviewStats(user) {
+            const due = (user.payments && user.payments.due) || 0;
+            const fare = user.semesterFee || 0;
+            const routeDistance = user.distanceKm || 0;
+            const fuelPrice = 100, workingDays = 90, efficiency = 6;
+            const dailyDistance = routeDistance * 2;
+            const totalFuelCost = routeDistance ? (dailyDistance / efficiency) * fuelPrice * workingDays : 0;
+            const totalKm = dailyDistance * workingDays;
+            const costPerKm = totalKm ? (fare / totalKm) : 0;
+            
+            document.getElementById('due-status').textContent = due > 0 ? `Due: ₹${due}` : 'Paid';
+            document.getElementById('current-fare').textContent = `₹${fare}`;
+            document.getElementById('route-info').textContent = user.route || 'Not Assigned';
+            document.getElementById('semester-info').textContent = user.semester || 'Fall 2025';
+            document.getElementById('fuel-cost').textContent = `₹${Math.round(totalFuelCost)}`;
+            document.getElementById('cost-per-km').textContent = `₹${costPerKm.toFixed(2)}/km`;
+        }
+
+        function showSection(sectionName) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(`${sectionName}-section`).classList.add('active');
+            event.target.classList.add('active');
+            
+            const titles = {
+                'overview': 'Dashboard Overview',
+                'routes': 'Bus Routes',
+                'attendance': 'Attendance',
+                'payments': 'Payments',
+                'notifications': 'Notifications',
+                'issues': 'Report Issue',
+                'profile': 'My Profile'
+            };
+            document.getElementById('section-title').textContent = titles[sectionName];
+        }
+
+        function loadRoutesSection(user) {
+            const container = document.getElementById('routes-container');
+            if (!user.route) {
+                container.innerHTML = `<div class="profile-card"><h2>No Route Assigned</h2></div>`;
+                return;
+            }
+            
+            const timings = { 'A': '7:30 AM - 6:00 PM', 'B': '7:45 AM - 5:45 PM', 'C': '7:15 AM - 6:15 PM', 'D': '8:00 AM - 5:30 PM' };
+            container.innerHTML = `
+                <div class="profile-card">
+                    <h2 style="color:#667eea;">🚌 ${user.route}</h2>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:15px; margin:20px 0; padding:20px; background:#f8f9fa; border-radius:10px;">
+                        <div><div style="font-size:12px; color:#666;">Bus Number</div><div style="font-size:18px; font-weight:bold;">${user.busNumber}</div></div>
+                        <div><div style="font-size:12px; color:#666;">Distance (One-way)</div><div style="font-size:18px; font-weight:bold;">${user.distanceKm} km</div></div>
+                        <div><div style="font-size:12px; color:#666;">Semester Fee</div><div style="font-size:18px; font-weight:bold; color:#667eea;">₹${user.semesterFee || 0}</div></div>
+                        <div><div style="font-size:12px; color:#666;">Cost per km</div><div style="font-size:18px; font-weight:bold;">${user.distanceKm ? '₹' + ((user.semesterFee || 0) / (user.distanceKm * 2 * 90)).toFixed(2) : 'N/A'}</div></div>
+                        <div><div style="font-size:12px; color:#666;">Destination</div><div style="font-size:18px; font-weight:bold;">${user.destination}</div></div>
+                        <div><div style="font-size:12px; color:#666;">Timing</div><div style="font-size:18px; font-weight:bold;">${timings[user.routeKey] || 'N/A'}</div></div>
+                    </div>
+                    <div style="margin:20px 0; padding:15px; background:#e0f2fe; border-left:4px solid #0284c7; border-radius:8px;">
+                        <div style="font-size:14px; color:#075985; margin-bottom:5px;">💰 Total Route Information</div>
+                        <div style="font-size:16px; color:#0c4a6e;"><strong>Distance:</strong> ${user.distanceKm} km (one-way) | <strong>Daily:</strong> ${user.distanceKm * 2} km | <strong>Semester Fee:</strong> ₹${user.semesterFee || 0}</div>
+                    </div>
+                    
+                    <h3 style="margin:20px 0 15px;">🚏 Bus Stops</h3>
+                    ${(user.stops || []).map((stop, i) => `
+                        <div style="padding:12px; background:${i === user.stops.length - 1 ? '#e0e7ff' : '#fff'}; margin-bottom:8px; border-radius:8px; border-left:4px solid ${i === user.stops.length - 1 ? '#667eea' : '#e1e1e1'};">
+                            <strong>${i + 1}.</strong> ${stop} ${i === user.stops.length - 1 ? '🎯' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function loadProfileSection(user) {
+            const container = document.getElementById('profile-info');
+            container.innerHTML = `
+                <div class="profile-item"><strong>Full Name:</strong><span>${user.name}</span></div>
+                <div class="profile-item"><strong>Roll Number:</strong><span>${user.rollNo}</span></div>
+                <div class="profile-item"><strong>Email:</strong><span>${user.email}</span></div>
+                <div class="profile-item"><strong>Department:</strong><span>${user.department}</span></div>
+                <div class="profile-item"><strong>Year:</strong><span>${user.year}</span></div>
+                <div class="profile-item"><strong>Route:</strong><span>${user.route || 'Not Assigned'}</span></div>
+                <div class="profile-item"><strong>Bus Number:</strong><span>${user.busNumber || 'N/A'}</span></div>
+            `;
+        }
+
+        function loadAttendance(user) {
+            const table = document.getElementById('attendance-table');
+            const summary = document.getElementById('attendance-summary');
+            const records = user.attendance || [];
+            const presentDays = records.filter(r => r.present).length;
+            const total = records.length;
+            const rate = total ? Math.round((presentDays/total)*100) : 0;
+            
+            summary.innerHTML = `
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:15px; padding:20px; background:#f8f9fa; border-radius:10px;">
+                    <div style="text-align:center;"><div style="font-size:32px; font-weight:bold; color:#16a34a;">${presentDays}</div><div style="color:#666;">Days Present</div></div>
+                    <div style="text-align:center;"><div style="font-size:32px; font-weight:bold; color:#dc2626;">${total - presentDays}</div><div style="color:#666;">Days Absent</div></div>
+                    <div style="text-align:center;"><div style="font-size:32px; font-weight:bold; color:#667eea;">${total}</div><div style="color:#666;">Total Days</div></div>
+                    <div style="text-align:center;"><div style="font-size:32px; font-weight:bold; color:#f59e0b;">${rate}%</div><div style="color:#666;">Attendance Rate</div></div>
+                </div>
+            `;
+            
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            table.innerHTML = records.length ? records.slice().reverse().map(r => {
+                const date = new Date(r.date);
+                return `
+                    <tr>
+                        <td>${date.toLocaleDateString()}</td>
+                        <td>${days[date.getDay()]}</td>
+                        <td style="color:${r.present?'#16a34a':'#dc2626'}; font-weight:600;">
+                            ${r.present?'✓ Present in Bus':'✗ Absent from Bus'}
+                        </td>
+                        <td>${user.route || 'N/A'}</td>
+                    </tr>
+                `;
+            }).join('') : '<tr><td colspan="4" style="text-align:center; color:#999;">No attendance records yet</td></tr>';
+        }
+
+        function renderPayments(user) {
+            const dueDiv = document.getElementById('payment-due');
+            const txDiv = document.getElementById('transactions');
+            const breakdownDiv = document.getElementById('fee-breakdown');
+            
+            const due = (user.payments && user.payments.due) || 0;
+            const totalFee = user.semesterFee || 0;
+            const paid = totalFee - due;
+            
+            // Calculate breakdown
+            const fuelPrice = 100;
+            const workingDays = 90;
+            const efficiency = 6;
+            const dailyDistance = (user.distanceKm || 0) * 2;
+            const totalFuelCost = dailyDistance ? (dailyDistance / efficiency) * fuelPrice * workingDays : 0;
+            const maintenanceCost = totalFuelCost * 0.15;
+            const driverSalary = 300;
+            const adminCost = 200;
+            const costPerKm = dailyDistance * workingDays > 0 ? totalFee / (dailyDistance * workingDays) : 0;
+            
+            breakdownDiv.innerHTML = `
+                <h3 style="margin-bottom:15px; color:#333;">Semester Fee Breakdown</h3>
+                <div style="display:grid; gap:10px;">
+                    <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e1e1e1;">
+                        <span><strong>⛽ Fuel Cost</strong> (${dailyDistance} km/day × ${workingDays} days ÷ ${efficiency} km/L × ₹${fuelPrice}/L)</span>
+                        <span style="font-weight:600;">₹${Math.round(totalFuelCost)}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e1e1e1;">
+                        <span><strong>🔧 Bus Maintenance</strong> (15% of fuel cost)</span>
+                        <span style="font-weight:600;">₹${Math.round(maintenanceCost)}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e1e1e1;">
+                        <span><strong>👨‍✈️ Driver Salary Share</strong></span>
+                        <span style="font-weight:600;">₹${driverSalary}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e1e1e1;">
+                        <span><strong>📋 Administrative Cost</strong></span>
+                        <span style="font-weight:600;">₹${adminCost}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:15px 0; background:#e0e7ff; margin:10px -20px -20px; padding:15px 20px; border-radius:0 0 10px 10px;">
+                        <span style="font-size:18px;"><strong>Total Semester Fee</strong></span>
+                        <span style="font-size:20px; font-weight:bold; color:#667eea;">₹${totalFee}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 0; margin-top:10px;">
+                        <span><strong>📏 Cost per Kilometer</strong></span>
+                        <span style="font-weight:600;">₹${costPerKm.toFixed(2)}/km</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 0;">
+                        <span><strong>🚌 Your Route</strong></span>
+                        <span style="font-weight:600;">${user.route || 'Not Assigned'}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 0;">
+                        <span><strong>📍 Distance (One-way)</strong></span>
+                        <span style="font-weight:600;">${user.distanceKm || 0} km</span>
+                    </div>
+                </div>
+            `;
+            
+            dueDiv.innerHTML = `
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div style="padding:15px; background:#dcfce7; border-radius:8px; border-left:4px solid #16a34a;">
+                        <div style="font-size:14px; color:#166534; margin-bottom:5px;">Paid Amount</div>
+                        <div style="font-size:24px; font-weight:bold; color:#16a34a;">₹${paid}</div>
+                    </div>
+                    <div style="padding:15px; background:${due > 0 ? '#fee2e2' : '#dcfce7'}; border-radius:8px; border-left:4px solid ${due > 0 ? '#dc2626' : '#16a34a'};">
+                        <div style="font-size:14px; color:${due > 0 ? '#991b1b' : '#166534'}; margin-bottom:5px;">${due > 0 ? 'Amount Due' : 'All Paid'}</div>
+                        <div style="font-size:24px; font-weight:bold; color:${due > 0 ? '#dc2626' : '#16a34a'};">₹${due}</div>
+                    </div>
+                </div>
+            `;
+            
+            const txns = (user.payments && user.payments.transactions) || [];
+            txDiv.innerHTML = txns.length ? `
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#f8f9fa;">
+                            <th style="padding:12px; text-align:left; border-bottom:2px solid #e1e1e1;">Date & Time</th>
+                            <th style="padding:12px; text-align:left; border-bottom:2px solid #e1e1e1;">Transaction ID</th>
+                            <th style="padding:12px; text-align:left; border-bottom:2px solid #e1e1e1;">Method</th>
+                            <th style="padding:12px; text-align:right; border-bottom:2px solid #e1e1e1;">Amount</th>
+                            <th style="padding:12px; text-align:center; border-bottom:2px solid #e1e1e1;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${txns.slice().reverse().map(t => `
+                            <tr>
+                                <td style="padding:12px; border-bottom:1px solid #e1e1e1;">${new Date(t.date).toLocaleString()}</td>
+                                <td style="padding:12px; border-bottom:1px solid #e1e1e1; font-family:monospace;">${t.id}</td>
+                                <td style="padding:12px; border-bottom:1px solid #e1e1e1;">${t.method}</td>
+                                <td style="padding:12px; border-bottom:1px solid #e1e1e1; text-align:right; font-weight:600;">₹${t.amount}</td>
+                                <td style="padding:12px; border-bottom:1px solid #e1e1e1; text-align:center;">
+                                    <span style="padding:4px 12px; border-radius:15px; background:#dcfce7; color:#16a34a; font-size:12px; font-weight:600;">
+                                        ✓ SUCCESS
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            ` : '<p style="color:#666; text-align:center; padding:20px;">No transactions yet.</p>';
+        }
+
+        function makePayment() {
+            const user = currentUser;
+            const amount = user.payments.due || 0;
+            if (amount <= 0) { alert('No dues to pay.'); return; }
+            const method = document.getElementById('pay-method').value;
+            const txn = { id: 'TXN-'+Date.now(), amount, method, date: new Date().toISOString(), status: 'success' };
+            user.payments.transactions.push(txn);
+            user.payments.due = 0;
+            user.notifications.push({ id: Date.now(), type:'success', title:'Payment Successful', message:`Payment of ₹${amount} received.`, read:false, date: new Date().toISOString() });
+            updateUser(user);
+            updateOverviewStats(user);
+            renderPayments(user);
+            renderNotifications(user);
+        }
+
+        function renderNotifications(user) {
+            const list = document.getElementById('notifications-list');
+            const items = (user.notifications||[]).slice().reverse();
+            list.innerHTML = items.length ? items.map(n => `
+                <div class="announcement-card" style="border-left-color:${n.read?'#94a3b8':'#667eea'}">
+                    <h3>${n.title}</h3>
+                    <p>${n.message}</p>
+                    <small>${new Date(n.date).toLocaleString()}</small>
+                </div>
+            `).join('') : '<p>No notifications.</p>';
+        }
+
+        function renderIssues(user) {
+            const list = document.getElementById('issues-list');
+            const items = user.issues || [];
+            list.innerHTML = items.length ? items.slice().reverse().map(i => `<div style="padding:12px; background:#f8f9fa; border-radius:8px; margin:10px 0;"><strong>${i.title}</strong><p style="color:#666; margin-top:5px;">${i.desc}</p><small>${new Date(i.date).toLocaleString()}</small></div>`).join('') : '<p>No issues reported.</p>';
+        }
+
+        function submitIssue() {
+            const user = currentUser;
+            const title = document.getElementById('issue-title').value.trim();
+            const desc = document.getElementById('issue-desc').value.trim();
+            if (!title) { alert('Please provide a title'); return; }
+            user.issues.push({ id: Date.now(), title, desc, date: new Date().toISOString() });
+            updateUser(user);
+            document.getElementById('issue-title').value = '';
+            document.getElementById('issue-desc').value = '';
+            renderIssues(user);
+        }
+
+        function updateUser(user) {
+            const users = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            const idx = users.findIndex(u => u.rollNo === user.rollNo);
+            if (idx >= 0) users[idx] = user;
+            localStorage.setItem('busSystemUsers', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            currentUser = user;
+        }
+
+        // ==================== ADMIN ====================
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const id = document.getElementById('admin-id').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (id === ADMIN_CREDENTIALS.id && password === ADMIN_CREDENTIALS.password) {
+                showPage('admin-dashboard');
+                initAdminDashboard();
+            } else {
+                showAlert('admin-auth-page', 'Invalid credentials', 'error');
+            }
+        }
+
+        function handleAdminLogout() {
+            if (confirm('Logout?')) showPage('home');
+        }
+
+        function initAdminDashboard() {
+            loadAdminStats();
+            loadBusesTable();
+            loadStudentsTable();
+            loadFeesTable();
+            loadGPSTracking();
+            loadMaintenanceTable();
+            updateMaintenanceBusDropdown();
+            document.getElementById('attendance-date').valueAsDate = new Date();
+            document.getElementById('maintenance-date').valueAsDate = new Date();
+        }
+
+        function loadAdminStats() {
+            const buses = JSON.parse(localStorage.getItem('adminBuses')) || [];
+            const students = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            
+            let totalRevenue = 0;
+            students.forEach(s => {
+                if (s.payments && s.payments.transactions) {
+                    s.payments.transactions.forEach(t => {
+                        if (t.status === 'success') totalRevenue += t.amount;
+                    });
+                }
+            });
+            
+            const today = new Date().toISOString().split('T')[0];
+            let todayAttendance = 0;
+            students.forEach(s => {
+                if (s.attendance) {
+                    const todayRecord = s.attendance.find(a => a.date.split('T')[0] === today);
+                    if (todayRecord && todayRecord.present) todayAttendance++;
+                }
+            });
+            
+            document.getElementById('total-buses').textContent = buses.length;
+            document.getElementById('total-students').textContent = students.length;
+            document.getElementById('total-revenue').textContent = '₹' + totalRevenue.toLocaleString();
+            document.getElementById('today-attendance').textContent = todayAttendance + '/' + students.length;
+        }
+
+        function showAdminSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(`admin-${section}-section`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function addBus() {
+            const name = document.getElementById('bus-name').value.trim();
+            const route = document.getElementById('bus-route').value;
+            const capacity = document.getElementById('bus-capacity').value.trim();
+            const fuelEfficiency = document.getElementById('bus-fuel-efficiency').value.trim();
+            const gps = document.getElementById('bus-gps').value.trim();
+            const maintenance = document.getElementById('bus-maintenance').value.trim();
+            
+            if (!name || !route || !capacity || !fuelEfficiency || !gps || !maintenance) { 
+                alert('Please fill all fields'); 
+                return; 
+            }
+            
+            const routeInfo = {
+                'A': { name: 'Route A - Main Campus', distance: 15, fee: 2500 },
+                'B': { name: 'Route B - East Side', distance: 12, fee: 2100 },
+                'C': { name: 'Route C - West Side', distance: 18, fee: 2900 },
+                'D': { name: 'Route D - North Campus', distance: 10, fee: 1900 }
+            };
+            
+            const buses = JSON.parse(localStorage.getItem('adminBuses')) || [];
+            const newBus = {
+                id: Date.now(),
+                name,
+                route: route,
+                routeName: routeInfo[route].name,
+                distance: routeInfo[route].distance,
+                capacity: parseInt(capacity),
+                fuelEfficiency: parseFloat(fuelEfficiency),
+                gpsId: gps,
+                maintenanceCost: parseInt(maintenance),
+                gpsLat: (12.9716 + Math.random() * 0.1).toFixed(6),
+                gpsLong: (77.5946 + Math.random() * 0.1).toFixed(6),
+                status: 'Active'
+            };
+            
+            buses.push(newBus);
+            localStorage.setItem('adminBuses', JSON.stringify(buses));
+            
+            document.getElementById('bus-name').value = '';
+            document.getElementById('bus-route').value = '';
+            document.getElementById('bus-capacity').value = '';
+            document.getElementById('bus-fuel-efficiency').value = '6';
+            document.getElementById('bus-gps').value = '';
+            document.getElementById('bus-maintenance').value = '';
+            
+            loadBusesTable();
+            loadAdminStats();
+            updateMaintenanceBusDropdown();
+            alert('Bus added successfully!');
+        }
+
+        function loadBusesTable() {
+            const buses = JSON.parse(localStorage.getItem('adminBuses')) || [];
+            const tbody = document.querySelector('#buses-table tbody');
+            tbody.innerHTML = buses.map(b => `
+                <tr>
+                    <td>${b.name}</td>
+                    <td>${b.routeName}</td>
+                    <td>${b.capacity}</td>
+                    <td>${b.fuelEfficiency} km/L</td>
+                    <td>${b.gpsId}</td>
+                    <td>₹${b.maintenanceCost}/month</td>
+                    <td><button onclick="deleteBus(${b.id})" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteBus(id) {
+            if (!confirm('Delete this bus?')) return;
+            let buses = JSON.parse(localStorage.getItem('adminBuses')) || [];
+            buses = buses.filter(b => b.id !== id);
+            localStorage.setItem('adminBuses', JSON.stringify(buses));
+            loadBusesTable();
+            loadAdminStats();
+            updateMaintenanceBusDropdown();
+        }
+
+        function addStudent() {
+            const name = document.getElementById('student-name').value.trim();
+            const rollNo = document.getElementById('student-rollno').value.trim();
+            const email = document.getElementById('student-email').value.trim();
+            const department = document.getElementById('student-department').value;
+            const year = document.getElementById('student-year').value;
+            const routeKey = document.getElementById('student-route').value;
+            const password = document.getElementById('student-password').value.trim();
+            
+            if (!name || !rollNo || !email || !department || !year || !routeKey || !password) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            if (users.some(u => u.rollNo === rollNo)) {
+                alert('Roll number already exists!');
+                return;
+            }
+            
+            const routeCatalog = {
+                'A': { name: 'Route A - Main Campus', distance: 15, busNumber: 'AP-28-TG-5401', destination: 'Main Campus Gate', stops: ['Miyapur', 'KPHB', 'Kukatpally', 'Balanagar', 'Erragadda', 'SR Nagar', 'Ameerpet', 'Main Campus'], fee: 2500 },
+                'B': { name: 'Route B - East Side', distance: 12, busNumber: 'AP-28-TG-5402', destination: 'East Campus', stops: ['Uppal', 'Habsiguda', 'Nacharam', 'Malakpet', 'Dilsukhnagar', 'East Campus'], fee: 2100 },
+                'C': { name: 'Route C - West Side', distance: 18, busNumber: 'AP-28-TG-5403', destination: 'West Campus', stops: ['Gachibowli', 'Madhapur', 'Hitec City', 'Kondapur', 'Manikonda', 'Mehdipatnam', 'Lakdikapul', 'Khairatabad', 'Begumpet', 'West Campus'], fee: 2900 },
+                'D': { name: 'Route D - North Campus', distance: 10, busNumber: 'AP-28-TG-5404', destination: 'North Campus', stops: ['Secunderabad', 'Trimulgherry', 'Alwal', 'Bollaram', 'North Campus'], fee: 1900 }
+            };
+            
+            const route = routeCatalog[routeKey];
+            const fuelPrice = 100, workingDays = 90, efficiency = 6;
+            const dailyDistance = route.distance * 2;
+            const totalFuelCost = (dailyDistance / efficiency) * fuelPrice * workingDays;
+            const fee = route.fee; // Use predefined fee for the route
+            
+            const newUser = {
+                name, rollNo, email, department, year, password,
+                registeredDate: new Date().toISOString(),
+                attendance: [],
+                notifications: [{ id: Date.now(), type: 'info', title: 'Welcome!', message: 'Your account has been created by admin. Your route is set to '+ route.name +'.', read: false, date: new Date().toISOString() }],
+                payments: { due: fee, transactions: [] },
+                issues: [],
+                route: route.name,
+                routeKey: routeKey,
+                distanceKm: route.distance,
+                busNumber: route.busNumber,
+                destination: route.destination,
+                stops: route.stops,
+                semesterFee: fee,
+                semester: 'Fall 2025',
+                busPass: { route: route.name, distanceKm: route.distance, fee: fee, semester: 'Fall 2025', status: 'pending' }
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('busSystemUsers', JSON.stringify(users));
+            
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-rollno').value = '';
+            document.getElementById('student-email').value = '';
+            document.getElementById('student-department').value = '';
+            document.getElementById('student-year').value = '';
+            document.getElementById('student-route').value = '';
+            document.getElementById('student-password').value = '';
+            
+            alert('Student added successfully!');
+            loadStudentsTable();
+            loadAdminStats();
+        }
+
+        function loadStudentsTable() {
+            const students = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            const tbody = document.querySelector('#students-table tbody');
+            tbody.innerHTML = students.map(s => `<tr><td>${s.name}</td><td>${s.rollNo}</td><td>${s.department}</td><td>${s.route || 'N/A'}</td><td>${s.busNumber || 'N/A'}</td><td><button onclick="deleteStudent('${s.rollNo}')" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button></td></tr>`).join('');
+        }
+
+        function deleteStudent(rollNo) {
+            if (!confirm('Delete this student?')) return;
+            let users = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            users = users.filter(u => u.rollNo !== rollNo);
+            localStorage.setItem('busSystemUsers', JSON.stringify(users));
+            loadStudentsTable();
+            loadAdminStats();
+            loadFeesTable();
+        }
+
+        // ==================== ATTENDANCE TRACKING ====================
+        function loadAttendanceForDate() {
+            const date = document.getElementById('attendance-date').value;
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+            
+            document.getElementById('selected-date-display').textContent = new Date(date).toLocaleDateString();
+            const students = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            const tbody = document.querySelector('#attendance-table tbody');
+            
+            tbody.innerHTML = students.map(s => {
+                const attendanceRecord = s.attendance ? s.attendance.find(a => a.date.split('T')[0] === date) : null;
+                const isPresent = attendanceRecord ? attendanceRecord.present : false;
+                
+                return `
+                    <tr>
+                        <td>${s.rollNo}</td>
+                        <td>${s.name}</td>
+                        <td>${s.route || 'N/A'}</td>
+                        <td style="color:${isPresent ? '#16a34a' : '#dc2626'}; font-weight:600;">
+                            ${isPresent ? '✓ Present' : '✗ Absent'}
+                        </td>
+                        <td>
+                            <button onclick="toggleAttendance('${s.rollNo}', '${date}')" 
+                                style="background:${isPresent ? '#dc2626' : '#16a34a'}; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">
+                                Mark ${isPresent ? 'Absent' : 'Present'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleAttendance(rollNo, date) {
+            const users = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            const user = users.find(u => u.rollNo === rollNo);
+            
+            if (user) {
+                if (!user.attendance) user.attendance = [];
+                
+                const existingRecord = user.attendance.find(a => a.date.split('T')[0] === date);
+                
+                if (existingRecord) {
+                    existingRecord.present = !existingRecord.present;
+                } else {
+                    user.attendance.push({
+                        date: new Date(date).toISOString(),
+                        present: true
+                    });
+                }
+                
+                localStorage.setItem('busSystemUsers', JSON.stringify(users));
+                loadAttendanceForDate();
+                loadAdminStats();
+            }
+        }
+
+        function markAllPresent() {
+            const date = document.getElementById('attendance-date').value;
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            
+            users.forEach(user => {
+                if (!user.attendance) user.attendance = [];
+                
+                const existingRecord = user.attendance.find(a => a.date.split('T')[0] === date);
+                
+                if (existingRecord) {
+                    existingRecord.present = true;
+                } else {
+                    user.attendance.push({
+                        date: new Date(date).toISOString(),
+                        present: true
+                    });
+                }
+            });
+            
+            localStorage.setItem('busSystemUsers', JSON.stringify(users));
+            loadAttendanceForDate();
+            loadAdminStats();
+            alert('All students marked present!');
+        }
+
+        // ==================== FEE DETAILS ====================
+        function loadFeesTable() {
+            const students = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            const tbody = document.querySelector('#fees-table tbody');
+            
+            tbody.innerHTML = students.map(s => {
+                const fuelPrice = 100;
+                const workingDays = 90;
+                const efficiency = 6;
+                const dailyDistance = (s.distanceKm || 0) * 2;
+                const totalFuelCost = dailyDistance ? (dailyDistance / efficiency) * fuelPrice * workingDays : 0;
+                const maintenanceCost = totalFuelCost * 0.15;
+                const totalFee = s.semesterFee || 0;
+                const due = (s.payments && s.payments.due) || 0;
+                const paid = totalFee - due;
+                
+                return `
+                    <tr>
+                        <td>${s.rollNo}</td>
+                        <td>${s.name}</td>
+                        <td>${s.route || 'N/A'}</td>
+                        <td style="font-weight:600;">₹${totalFee}</td>
+                        <td>₹${Math.round(totalFuelCost)}</td>
+                        <td>₹${Math.round(maintenanceCost)}</td>
+                        <td style="color:${due > 0 ? '#dc2626' : '#16a34a'}; font-weight:600;">₹${due}</td>
+                        <td style="color:#16a34a;">₹${paid}</td>
+                        <td>
+                            <span style="padding:4px 12px; border-radius:15px; background:${due > 0 ? '#fee2e2' : '#dcfce7'}; color:${due > 0 ? '#dc2626' : '#16a34a'}; font-size:12px; font-weight:600;">
+                                ${due > 0 ? 'PENDING' : 'PAID'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==================== GPS TRACKING ====================
+        function loadGPSTracking() {
+            const buses = JSON.parse(localStorage.getItem('adminBuses')) || [];
+            const container = document.getElementById('gps-container');
+            
+            if (buses.length === 0) {
+                container.innerHTML = '<p style="color:#666;">No buses added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = buses.map(b => `
+                <div style="background:#f8f9fa; padding:20px; border-radius:10px; margin-bottom:15px; border-left:4px solid #667eea;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 style="margin-bottom:10px; color:#333;">🚌 ${b.name}</h3>
+                            <p style="color:#666; margin:5px 0;"><strong>Route:</strong> ${b.routeName}</p>
+                            <p style="color:#666; margin:5px 0;"><strong>GPS ID:</strong> ${b.gpsId}</p>
+                            <p style="color:#666; margin:5px 0;"><strong>Status:</strong> <span style="color:#16a34a; font-weight:600;">● Active</span></p>
+                        </div>
+                        <div style="text-align:right;">
+                            <p style="color:#666; margin:5px 0;"><strong>Latitude:</strong> ${b.gpsLat}</p>
+                            <p style="color:#666; margin:5px 0;"><strong>Longitude:</strong> ${b.gpsLong}</p>
+                            <p style="color:#666; margin:5px 0; font-size:12px;">Last updated: ${new Date().toLocaleTimeString()}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== MAINTENANCE ====================
+        function updateMaintenanceBusDropdown() {
+            const buses = JSON.parse(localStorage.getItem('adminBuses')) || [];
+            const select = document.getElementById('maintenance-bus');
+            select.innerHTML = '<option value="">Select Bus</option>' + 
+                buses.map(b => `<option value="${b.id}">${b.name} - ${b.routeName}</option>`).join('');
+        }
+
+        function addMaintenanceRecord() {
+            const busId = document.getElementById('maintenance-bus').value;
+            const type = document.getElementById('maintenance-type').value;
+            const cost = document.getElementById('maintenance-cost').value;
+            const date = document.getElementById('maintenance-date').value;
+            const notes = document.getElementById('maintenance-notes').value;
+            
+            if (!busId || !cost || !date) {
+                alert('Please fill all required fields');
+                return;
+            }
+            
+            const buses = JSON.parse(localStorage.getItem('adminBuses')) || [];
+            const bus = buses.find(b => b.id == busId);
+            
+            if (!bus) {
+                alert('Bus not found');
+                return;
+            }
+            
+            const maintenanceRecords = JSON.parse(localStorage.getItem('maintenanceRecords')) || [];
+            maintenanceRecords.push({
+                id: Date.now(),
+                busId: bus.id,
+                busName: bus.name,
+                type,
+                cost: parseInt(cost),
+                date,
+                notes,
+                createdAt: new Date().toISOString()
+            });
+            
+            localStorage.setItem('maintenanceRecords', JSON.stringify(maintenanceRecords));
+            
+            document.getElementById('maintenance-cost').value = '';
+            document.getElementById('maintenance-notes').value = '';
+            
+            loadMaintenanceTable();
+            alert('Maintenance record added successfully!');
+        }
+
+        function loadMaintenanceTable() {
+            const records = JSON.parse(localStorage.getItem('maintenanceRecords')) || [];
+            const tbody = document.querySelector('#maintenance-table tbody');
+            
+            tbody.innerHTML = records.slice().reverse().map(r => `
+                <tr>
+                    <td>${new Date(r.date).toLocaleDateString()}</td>
+                    <td>${r.busName}</td>
+                    <td>${r.type}</td>
+                    <td style="font-weight:600;">₹${r.cost}</td>
+                    <td>${r.notes || '-'}</td>
+                    <td>
+                        <button onclick="deleteMaintenanceRecord(${r.id})" 
+                            style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteMaintenanceRecord(id) {
+            if (!confirm('Delete this record?')) return;
+            let records = JSON.parse(localStorage.getItem('maintenanceRecords')) || [];
+            records = records.filter(r => r.id !== id);
+            localStorage.setItem('maintenanceRecords', JSON.stringify(records));
+            loadMaintenanceTable();
+        }
+
+        // ==================== INIT ====================
+        window.onload = function() {
+            // Initialize demo data
+            const users = JSON.parse(localStorage.getItem('busSystemUsers')) || [];
+            if (users.length === 0) {
+                const demoUser = {
+                    name: "Demo Student",
+                    rollNo: "21A91A6701",
+                    email: "demo@student.edu",
+                    department: "CSE(AIML)",
+                    year: "2",
+                    password: "demo123",
+                    registeredDate: new Date().toISOString(),
+                    attendance: [
+                        { date: new Date('2025-10-28').toISOString(), present: true },
+                        { date: new Date('2025-10-29').toISOString(), present: true },
+                        { date: new Date('2025-10-30').toISOString(), present: false },
+                        { date: new Date('2025-10-31').toISOString(), present: true },
+                        { date: new Date('2025-11-01').toISOString(), present: true }
+                    ],
+                    notifications: [{ id: 1, type: 'update', title: 'Welcome!', message: 'Your account has been created.', read: false, date: new Date().toISOString() }],
+                    payments: { due: 0, transactions: [{ id: 'TXN-DEMO', amount: 2500, method: 'UPI', date: new Date().toISOString(), status: 'success' }] },
+                    issues: [],
+                    route: "Route A - Main Campus",
+                    routeKey: 'A',
+                    distanceKm: 15,
+                    busNumber: 'AP-28-TG-5401',
+                    destination: 'Main Campus Gate',
+                    stops: ['Miyapur', 'KPHB', 'Kukatpally', 'Balanagar', 'Erragadda', 'SR Nagar', 'Ameerpet', 'Main Campus'],
+                    semesterFee: 2500,
+                    semester: "Fall 2025",
+                    busPass: { route: 'Route A - Main Campus', distanceKm: 15, fee: 2500, semester: 'Fall 2025', status: 'active' }
+                };
+                users.push(demoUser);
+                localStorage.setItem('busSystemUsers', JSON.stringify(users));
+                console.log('Demo user created - Roll: 21A91A6701, Pass: demo123');
+            }
+            
+            showPage('home');
+        };
+    </script>
+</body>
+</html>

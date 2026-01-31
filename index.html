@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - Bus Fare Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="logo">
+                <h1>🚌 Bus Fare Management</h1>
+                <p>AIML Department - Code Rush 2025</p>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('login')">Login</button>
+                <button class="tab-btn" onclick="showTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="form-container active">
+                <h2>Student Login</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="login-rollno">Roll Number</label>
+                        <input type="text" id="login-rollno" placeholder="Enter your roll number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="register-form" class="form-container">
+                <h2>Student Registration</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-rollno">Roll Number</label>
+                        <input type="text" id="reg-rollno" placeholder="Enter your roll number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-route">Preferred Route</label>
+                        <select id="reg-route" required>
+                            <option value="">Select Route</option>
+                            <option value="A">Route A - Main Campus (15 km)</option>
+                            <option value="B">Route B - East Side (12 km)</option>
+                            <option value="C">Route C - West Side (18 km)</option>
+                            <option value="D">Route D - North Campus (10 km)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-department">Department</label>
+                        <select id="reg-department" required>
+                            <option value="">Select Department</option>
+                            <option value="CSE(AIML)">CSE (AIML)</option>
+                            <option value="CSE">CSE</option>
+                            <option value="ECE">ECE</option>
+                            <option value="EEE">EEE</option>
+                            <option value="MECH">Mechanical</option>
+                            <option value="CIVIL">Civil</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-year">Year</label>
+                        <select id="reg-year" required>
+                            <option value="">Select Year</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-confirm-password">Confirm Password</label>
+                        <input type="password" id="reg-confirm-password" placeholder="Confirm your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
