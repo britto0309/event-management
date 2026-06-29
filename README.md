@@ -11,28 +11,28 @@ College bus transportation fees have become a significant financial burden for s
 
 ### Features
 
-#### 🔐 Student Authentication
+#### Student Authentication
 - **Login System**: Secure student login with roll number and password
 - **Registration**: New student registration with department and year details
 - **Session Management**: Persistent login sessions using localStorage
 
-#### 📊 Dashboard
+#### Dashboard
 - **Overview**: Quick stats showing pass status, current fare, route, and semester
 - **Announcements**: Important updates and notifications
 - **User Profile**: Complete student information display
 
-#### 🎫 Bus Pass Management
+#### Bus Pass Management
 - **Active Pass Display**: View current bus pass details
 - **Pass Information**: Semester, route, fee, and status
 - **Application**: Apply for new bus pass
 
-#### 🗺️ Bus Routes
+#### Bus Routes
 - **Route A - Main Campus**: 15 km, 8 stops, ₹2,500/semester
 - **Route B - East Side**: 12 km, 6 stops, ₹2,200/semester
 - **Route C - West Side**: 18 km, 10 stops, ₹2,800/semester
 - **Route D - North Campus**: 10 km, 5 stops, ₹2,000/semester
 
-#### 💰 Fare Calculator
+#### Fare Calculator
 - **AI-Based Calculation**: Calculate optimized fares based on:
   - Route distance
   - Fuel prices (dynamic)
@@ -42,7 +42,7 @@ College bus transportation fees have become a significant financial burden for s
   - Administrative costs
 - **Transparent Breakdown**: Detailed cost distribution
 
-#### 🔧 Maintenance Logs
+#### Maintenance Logs
 - **Digital Records**: Complete maintenance history
 - **Transparency**: View all vehicle service records
 - **Cost Tracking**: Monitor maintenance expenses
